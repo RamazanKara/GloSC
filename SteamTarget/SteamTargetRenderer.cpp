@@ -15,6 +15,10 @@ limitations under the License.
 */
 #include "SteamTargetRenderer.h"
 
+
+
+
+
 std::atomic<bool> SteamTargetRenderer::overlayOpen = false;
 HHOOK SteamTargetRenderer::hook = nullptr;
 std::atomic<bool> SteamTargetRenderer::bHookSteam = false;
@@ -24,6 +28,11 @@ SteamTargetRenderer::SteamTargetRenderer(int& argc, char** argv) : QApplication(
 {
 	getSteamOverlay();
 	loadLogo();
+
+#ifndef NDEBUG
+	std::cout << "Press to continue!\n";
+	std::cin.get();
+#endif // NDEBUG
 
 	SetConsoleCtrlHandler(reinterpret_cast<PHANDLER_ROUTINE>(ConsoleCtrlCallback), true);
 	if (this->arguments().size() == 1)
@@ -162,7 +171,8 @@ void SteamTargetRenderer::RunSfWindowLoop()
 		if (bDrawDebugEdges)
 			drawDebugEdges();
 
-
+		//Dirty dirty hacky code incoming.
+		//Leave as is as it just plain works.
 		//This ensures that we stay in game binding, even if focused application changes! (Why does this work? Well, i dunno... ask Valve...)
 		//Only works with a console window
 		//Causes trouble as soon as there is more than the consoleWindow and the overlayWindow
